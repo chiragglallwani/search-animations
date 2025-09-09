@@ -1,6 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Search Animations
 
-## Getting Started
+A modern, animated search interface built with Next.js featuring smooth transitions, interactive tooltips, and dynamic content filtering. Press the 'S' key to activate the search and experience fluid animations powered by TailwindCSS.
+
+## ✨ Features
+
+- **Keyboard Activation**: Press 'S' key to focus the search input
+- **Smooth Animations**: Height transitions, fade effects, and counting animations
+- **Real-time Search**: 2-second debounced search with live filtering
+- **Interactive Tooltips**: Hover tooltips with copy functionality
+- **Skeleton Loading**: Animated loading states during data fetching
+- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Category Filtering**: Filter results by All, Files, Profile, Chats, Lists
+- **Settings Panel**: Customizable display options
+- **Text Highlighting**: Search terms highlighted in results
+
+## 🚀 Getting Started
 
 First, run the development server:
 
@@ -16,32 +30,131 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Core Framework
 
-## Learn More
+- **[Next.js 15](https://nextjs.org)** - React framework with App Router
+- **[React 18](https://react.dev)** - UI library with hooks and modern patterns
 
-To learn more about Next.js, take a look at the following resources:
+### Styling & Animation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **[TailwindCSS](https://tailwindcss.com)** - Utility-first CSS framework
+- **[Tailwind Merge](https://github.com/dcastil/tailwind-merge)** - Merge Tailwind classes intelligently
+- **[Clsx](https://github.com/lukeed/clsx)** - Conditional className utility
+- **CSS Transitions** - Smooth animations for height, opacity, and transforms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Icons & Typography
 
-## Theme
+- **[Lucide React](https://lucide.dev)** - Beautiful, customizable SVG icons
+- **Sequel Sans** - Custom font family with multiple weights:
+  - Light (300) - Display text
+  - Regular (400) - Body text
+  - Semibold (600) - Display text
+  - Bold (800) - Headings
 
-- black: #292929
-- white: #ffffff
-- font-black: #050505
-- bg-white: #e0e0e0
+### Code Quality
 
-## Data
+- **[Prettier](https://prettier.io)** - Code formatting
+- **[ESLint](https://eslint.org)** - Code linting and error detection
 
-- Dummy Data saved inside public directory
+## 🎨 Animation System
 
-## Deploy on Vercel
+### TailwindCSS Animations Used
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `transition-all` - Smooth property transitions
+- `duration-*` - Animation timing (200ms, 500ms, 1000ms)
+- `ease-in-out` - Smooth easing functions
+- `animate-pulse` - Skeleton loading effect
+- `opacity-*` - Fade in/out effects
+- `max-h-*` - Height expansion animations
+- `transform` - Scale and translate effects
+- `group-hover:*` - Hover state animations
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Key Animation Features
+
+1. **Search Activation**: Smooth height expansion when search is active
+2. **Counter Animation**: Numbers count up from 0 to target value
+3. **Tooltip Transitions**: Fade in/out with proper positioning
+4. **Hover Effects**: Interactive button and row hover states
+5. **Loading States**: Pulsing skeleton loaders during data fetch
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── globals.css          # Global styles and font imports
+│   ├── layout.js            # Root layout component
+│   └── page.jsx             # Main page component
+├── components/
+│   ├── Searchbar.jsx        # Main search input component
+│   ├── Results.jsx          # Search results display
+│   ├── DataRow.jsx          # Individual result row
+│   ├── SkeletonLoader.jsx   # Loading state component
+│   ├── SettingsDialog.jsx   # Settings panel
+│   └── ui/                  # Reusable UI components
+├── lib/
+│   └── utils.js             # Utility functions
+└── assets/
+    └── cursor.svg           # Custom cursor icon
+```
+
+## 🎯 How It Works
+
+### Search Flow
+
+1. **Keyboard Activation**: Global 'S' key listener focuses search input
+2. **Input Handling**: Real-time input with 2-second debounce
+3. **Data Fetching**: Fetches from `/public/results.json`
+4. **Filtering**: Filters results based on title matching
+5. **Animation**: Smooth height expansion and content fade-in
+6. **Display**: Renders filtered results with animations
+
+### Animation Triggers
+
+- **Search Input**: Height expansion on focus/input
+- **Results Loading**: Skeleton loader during fetch
+- **Counter Updates**: Animated counting for result counts
+- **Hover States**: Tooltip and button hover effects
+- **Settings Panel**: Slide-in animation for settings
+
+## 🎨 Design System
+
+### Color Palette
+
+- **Background**: #e0e0e0 (Light gray)
+- **Foreground**: #292929 (Dark gray)
+- **Font Black**: #050505 (Near black)
+- **White**: #ffffff (Pure white)
+
+### Typography
+
+- **Font Family**: Sequel Sans (Custom)
+- **Weights**: 300 (Light), 400 (Regular), 600 (Semibold), 800 (Bold)
+- **Fallbacks**: System fonts for better compatibility
+
+## 📦 Dependencies
+
+```json
+{
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "18.2.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "prettier": "^3.0.0",
+    "eslint": "^8.0.0"
+  }
+}
+```
+
+## 🚀 Deployment
+
+- Checkout this link to preview the [Website](https://search-animations.vercel.app/)
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
