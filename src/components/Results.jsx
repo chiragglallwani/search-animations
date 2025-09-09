@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Menu, MessageCircle, Paperclip, Settings, User } from "lucide-react";
 import Tab from "@/components/ui/Tab";
 import SettingsDialog from "@/components/SettingsDialog";
+import DataRow from "@/components/DataRow";
+import SkeletonLoader from "@/components/SkeletonLoader";
 
 const TABS = {
   All: "All",
@@ -13,12 +15,13 @@ const TABS = {
   Lists: "Lists",
 };
 
-export default function Results({ data }) {
+export default function Results({ data, isLoading = false, search }) {
   const activeTabClass = "font-semibold border-b-2 border-black text-black";
   const inactiveTabClass = "font-semibold pb-2 px-1 text-gray-500 text-md";
   const iconClass = "w-5 h-5 text-gray-400";
 
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState(TABS.All);
+  const [filteredData, setFilteredData] = useState();
   const [typesFound, setTypesFound] = useState({
     [TABS.Files]: 0,
     [TABS.Profile]: 0,
@@ -38,39 +41,45 @@ export default function Results({ data }) {
     {
       name: TABS.All,
       count: data.length,
-      onClick: () => setActiveTab("all"),
-      className: cn(inactiveTabClass, activeTab === "all" && activeTabClass),
+      onClick: () => setActiveTab(TABS.All),
+      className: cn(inactiveTabClass, activeTab === TABS.All && activeTabClass),
     },
     {
       name: TABS.Files,
       icon: <Paperclip className={iconClass} />,
       count: typesFound.Files,
-      onClick: () => setActiveTab("files"),
-      className: cn(inactiveTabClass, activeTab === "files" && activeTabClass),
+      onClick: () => setActiveTab(TABS.Files),
+      className: cn(
+        inactiveTabClass,
+        activeTab === TABS.Files && activeTabClass
+      ),
     },
     {
       name: TABS.Profile,
       icon: <User className={iconClass} />,
       count: typesFound.Profile,
-      onClick: () => setActiveTab("profile"),
+      onClick: () => setActiveTab(TABS.Profile),
       className: cn(
         inactiveTabClass,
-        activeTab === "profile" && activeTabClass
+        activeTab === TABS.Profile && activeTabClass
       ),
     },
     {
       name: TABS.Chats,
       icon: <MessageCircle className={iconClass} />,
       count: typesFound.Chats,
-      onClick: () => setActiveTab("chats"),
+      onClick: () => setActiveTab(TABS.Chats),
       className: cn(inactiveTabClass, activeTab === "chats" && activeTabClass),
     },
     {
       name: TABS.Lists,
       icon: <Menu className={iconClass} />,
       count: typesFound.Lists,
-      onClick: () => setActiveTab("lists"),
-      className: cn(inactiveTabClass, activeTab === "lists" && activeTabClass),
+      onClick: () => setActiveTab(TABS.Lists),
+      className: cn(
+        inactiveTabClass,
+        activeTab === TABS.Lists && activeTabClass
+      ),
     },
   ];
 
@@ -90,11 +99,21 @@ export default function Results({ data }) {
     });
   }, [data]);
 
+  useEffect(() => {
+    if (activeTab !== TABS.All) {
+      setFilteredData(data.filter(item => item.type === activeTab));
+    } else {
+      setFilteredData(data);
+    }
+  }, [activeTab, data]);
+
+  console.log(filteredData);
+
   return (
-    <div className="h-96 w-full">
-      <div className="flex border-b border-gray-200 px-5">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex gap-2">
+    <div className="h-96 w-full flex flex-col bg-white rounded-2xl">
+      <div className="flex border-b border-gray-200 px-5 flex-shrink-0">
+        <div className="flex items-center justify-between w-full gap-4 md:gap-0">
+          <div className="flex gap-2 overflow-x-auto">
             {Tabs.filter(tab => showTabs[tab.name]).map(tab => (
               <Tab key={tab.name} {...tab} />
             ))}
@@ -110,7 +129,7 @@ export default function Results({ data }) {
               />
             </button>
             {showSettings && (
-              <div className="absolute top-10 right-0 drop-shadow-2xl bg-white rounded-md p-4">
+              <div className="absolute top-10 right-0 drop-shadow-2xl bg-white rounded-md p-4 z-4">
                 <div className="flex flex-col">
                   <form>
                     {Tabs.slice(1).map(tab => (
@@ -119,12 +138,15 @@ export default function Results({ data }) {
                         key={tab.name}
                         label={tab.name}
                         value={showTabs[tab.name]}
-                        onChange={() =>
+                        onChange={() => {
                           setShowTabs({
                             ...showTabs,
                             [tab.name]: !showTabs[tab.name],
-                          })
-                        }
+                          });
+                          if (activeTab === tab.name) {
+                            setActiveTab(TABS.All);
+                          }
+                        }}
                       />
                     ))}
                   </form>
@@ -134,10 +156,19 @@ export default function Results({ data }) {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2 px-5">
-        {data.map(item => (
-          <div key={item.id}>{item.title}</div>
-        ))}
+      <div className="flex flex-col mt-4 overflow-y-auto flex-1 rounded-b-2xl">
+        {isLoading ? (
+          <SkeletonLoader />
+        ) : filteredData?.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-32 text-gray-500">
+            <p className="text-lg font-medium">No results found</p>
+            <p className="text-sm">Try adjusting your search terms</p>
+          </div>
+        ) : (
+          filteredData?.map(item => (
+            <DataRow search={search} key={item.id} item={item} />
+          ))
+        )}
       </div>
     </div>
   );

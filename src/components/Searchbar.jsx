@@ -7,6 +7,7 @@ import Results from "@/components/Results";
 export default function SearchBar() {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
 
   function handleSearch(e) {
@@ -16,7 +17,7 @@ export default function SearchBar() {
   useEffect(() => {
     const handleKeyDown = event => {
       if (
-        event.key.toLowerCase() === "s" &&
+        event.key?.toLowerCase() === "s" &&
         !event.ctrlKey &&
         !event.metaKey &&
         !event.altKey
@@ -38,8 +39,12 @@ export default function SearchBar() {
   useEffect(() => {
     if (search.length === 0) {
       setData([]);
+      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
+    setData([]);
 
     const timeoutId = setTimeout(async () => {
       try {
@@ -51,9 +56,11 @@ export default function SearchBar() {
         );
 
         setData(filteredData);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
         setData([]);
+        setIsLoading(false);
       }
     }, 2000);
 
@@ -65,7 +72,11 @@ export default function SearchBar() {
       className={`w-[90%] md:w-[70%] lg:w-[55%] mx-auto bg-white rounded-2xl drop-shadow-lg transition-all duration-1000 ease-in-out h-auto`}
     >
       <div className="flex gap-2 items-center p-5">
-        <form className="w-full flex-1" onChange={handleSearch}>
+        <form
+          className="w-full flex-1"
+          autoComplete="off"
+          onChange={handleSearch}
+        >
           <div className="flex items-center justify-start gap-2">
             {search.length > 0 && data.length === 0 ? (
               <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
@@ -109,13 +120,13 @@ export default function SearchBar() {
         </div>
       </div>
       <div
-        className={`transition-all duration-1000 ease-in-out overflow-hidden ${
+        className={`transition-all duration-1000 ease-in-out ${
           search.length > 0
             ? "max-h-screen opacity-100 mt-4"
             : "max-h-0 opacity-0 mt-0"
         }`}
       >
-        <Results data={data} />
+        <Results search={search} data={data} isLoading={isLoading} />
       </div>
     </div>
   );
