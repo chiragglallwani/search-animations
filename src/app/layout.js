@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
         <meta name="author" content="Search Animations" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={`antialiased bg-gray-300/70`}>{children}</body>
+      <body className={`antialiased bg-black/10`}>{children}</body>
     </html>
   );
 }
